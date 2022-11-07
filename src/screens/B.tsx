@@ -16,7 +16,7 @@ export const BScreen: FC = () => {
       <Text style={styles.title}>Screen B</Text>
       <View style={styles.buttonContainer}>
         <Button
-          hasTVPreferredFocus
+          index={0}
           outline
           label="Go to A"
           width={scaleSize(336)}
@@ -26,6 +26,7 @@ export const BScreen: FC = () => {
           canGoLeft={false}
         />
         <Button
+          index={1}
           outline
           label="Go to C"
           width={scaleSize(336)}

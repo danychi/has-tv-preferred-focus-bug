@@ -1,3 +1,4 @@
+import {useIsFocused} from '@react-navigation/native';
 import React, {useState, useCallback, useRef} from 'react';
 import {
   StyleSheet,
@@ -11,12 +12,13 @@ import {
   FlexAlignType,
 } from 'react-native';
 import {COLORS} from '../styles';
-import {scaleSize} from '../utils';
+import {FocusService, scaleSize} from '../utils';
 
 type Props = Omit<
   React.ComponentProps<typeof TouchableOpacity>,
   'onBlur' | 'style' | 'hitSlop' | 'activeOpacity' | 'disabled'
 > & {
+  index: number;
   label: string;
   onPress?: () => void;
   width?: ViewStyle['width'];
@@ -31,7 +33,7 @@ type Props = Omit<
 export const Button = React.forwardRef<TouchableOpacity, Props>(
   (
     {
-      hasTVPreferredFocus,
+      index,
       label,
       onPress,
       textAlignment = 'center',
@@ -49,6 +51,7 @@ export const Button = React.forwardRef<TouchableOpacity, Props>(
     },
     ref,
   ) => {
+    const isViewFocused = useIsFocused();
     const [isFocused, setIsFocused] = useState(false);
 
     const onButtonFocus = useCallback(
@@ -69,10 +72,18 @@ export const Button = React.forwardRef<TouchableOpacity, Props>(
           {marginRight: scaleSize(16)},
         ]}>
         <TouchableOpacity
-          hasTVPreferredFocus={hasTVPreferredFocus}
+          hasTVPreferredFocus={
+            isViewFocused &&
+            (FocusService.instance?.focusedTag ===
+              findNodeHandle(localRef.current) ||
+              index === 0)
+          }
           activeOpacity={1} // Do not want the opacity effect
           onFocus={onButtonFocus}
-          onBlur={() => setIsFocused(false)}
+          onBlur={() => {
+            setIsFocused(false);
+            FocusService.instance?.clearFocusedTag();
+          }}
           onPress={onPress}
           style={[
             styles.container,

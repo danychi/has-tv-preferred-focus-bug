@@ -16,7 +16,7 @@ export const CScreen: FC = () => {
       <Text style={styles.title}>Screen C</Text>
       <View style={styles.buttonContainer}>
         <Button
-          hasTVPreferredFocus
+          index={0}
           outline
           label="Go to A"
           width={scaleSize(336)}
@@ -26,7 +26,7 @@ export const CScreen: FC = () => {
           canGoLeft={false}
         />
         <Button
-          outline
+          index={1}
           label="Go to B"
           width={scaleSize(336)}
           onPress={() => navigation.navigate('B')}
